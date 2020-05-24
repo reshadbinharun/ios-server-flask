@@ -1,2 +1,1 @@
-web: gunicorn app:ios-project
-web: gunicorn run:ios-project
+web: gunicorn ios-project:app
