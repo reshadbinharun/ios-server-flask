@@ -17,7 +17,31 @@ import os
 # x_path = 'training_data/pH/sensitivity_csv_files/x_train/'
 # y_path = 'training_data/pH/sensitivity_csv_files/y_train/'
 # x_path_list = sorted(os.listdir(x_path))
+# y_path_list = sorted(os.listdir(y_path))
 # sense_y_train, sense_x_train, sense_y_test, sense_x_test = create_data_vectors(x_path_list, y_path_list, x_path, y_path)
+
+X = pd.read_csv('../low_resolution_images/x_train_lowres_270.csv')
+Y = pd.read_csv('../low_resolution_images/y_train_lowres_270.csv')
+X_2 = pd.read_csv('../low_resolution_images/x_train_lowres_272.csv')
+Y_2 = pd.read_csv('../low_resolution_images/y_train_lowres_272.csv')
+X_3 = pd.read_csv('../low_resolution_images/x_train_lowres_268.csv')
+Y_3 = pd.read_csv('../low_resolution_images/y_train_lowres_268.csv')
+
+X_aug = np.concatenate((np.asarray(X), np.asarray(X_2), np.asarray(X_3)), axis=0)
+Y_aug = np.concatenate((np.asarray(Y), np.asarray(Y_2), np.asarray(Y_3)), axis=0)
+
+#center and scale predictors
+X_Z = StandardScaler().fit_transform(X_aug)
+#concatenate X_Z and Y
+data = np.concatenate((Y_aug, X_Z), axis = 1)
+
+#train-test split
+train, test = train_test_split(data, test_size=0.1)
+
+train_outcome = train[:,0]
+train_predictors = train[:,1:5851]
+test_outcome = test[:,0]
+test_predictors = test[:,1:5851]
 
 # Creates training and test split from image set
 def create_data_vectors(x_path_list, y_path_list, x_path, y_path):
